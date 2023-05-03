@@ -10,6 +10,7 @@ import SwiftUI
 struct SearchView: View {
     
     @Binding var searchString: String
+    @State private var isEditing = false
     
     var body: some View {
         ZStack{

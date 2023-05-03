@@ -13,22 +13,27 @@ struct ContentView: View {
     @State private var joke: String = ""
     @State var searchString = ""
         var body: some View {
-            
             NavigationView{
                 VStack{
-                    SearchView(searchString: $searchString)
                     MainMenuView()
                         .navigationTitle("NBA Player Finder")
                         .offset(y: -60)
-                    NavigationLink(destination: Text("Destination"), label: {Text("Next Screen")})
+                    NavigationLink(destination: Text("Destination"), label: {Text("Get Started")})
+                        .searchable(text: $searchString)
+                        .onChange(of: searchString) {value in
+                            Task.init {
+                                if !value.isEmpty && value.count > 3 {
+                                    searchString = value
+                                }
+                            }
+                        }
                 }
                 
             }
-            
             Text(joke)
             Button {
                 Task {
-                    let (origData, _) = try await URLSession.shared.data(from: URL(string:"https://www.balldontlie.io/api/v1/players?search=Curry")!)
+                    let (origData, _) = try await URLSession.shared.data(from: URL(string:"https://www.balldontlie.io/api/v1/players?search=\(searchString)")!)
                     /*
                     let decodedResponse = try? JSONDecoder().decode(Joke.self, from: data)
                     joke = decodedResponse?.value2 ?? ""
@@ -37,7 +42,8 @@ struct ContentView: View {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let searchData = try decoder.decode(searchData.self, from: origData)
-                    joke = searchData.data[1].firstName + "" + String(searchData.meta.totalCount)
+                   
+                    joke = searchData.data[0].lastName + "" + String(searchData.meta.totalCount)
                 }
             }label: {
                 Text("Fetch Joke")
@@ -47,7 +53,6 @@ struct ContentView: View {
 }
 
 struct MainMenuView: View {
-    
     var body: some View {
         ZStack{
             Image("NBALogo")
@@ -56,6 +61,7 @@ struct MainMenuView: View {
                 .frame(width:200, height: 200)
         }
     }
+    
 }
 
 
