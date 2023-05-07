@@ -10,6 +10,10 @@ import SwiftUI
 struct PlayerView: View {
     
     @State public var players = [ Player(firstName: "First Name", lastName: "Last Name", team: "Team")]
+    /*
+    @State public var playerVM = [ PlayerViewModel(firstName: "First Name", lastName: "Last Name", team: "Team", position: "Position", heightFeet: <#T##Int#>, heightInches: <#T##Int#>, weightPounds: <#T##Int#>)]
+     */
+    
     @State private var defaultString: String = "No results found"
     @State private var doneString: String = ""
     @State var searchString = ""
@@ -20,29 +24,36 @@ struct PlayerView: View {
                 MainMenuView2()
                     .offset(y:-150)
                     .searchable(text: $searchString)
-                                    .onChange(of: searchString) {value in
-                                        Task.init {
-                                            if !value.isEmpty && value.count > 0 {
-                                                searchString = value
-                                                players = [ Player(firstName: "First Name", lastName: "Last Name", team: "Team")]
-                                            }else{
+                    .onChange(of: searchString) {value in
+                        Task.init {
+                            if !value.isEmpty && value.count > 0 {
+                            searchString = value
+                            players = [ Player(firstName: "First Name", lastName: "Last Name", team: "Team")]
+                                /*
+                            playerVM = [ PlayerViewModel(firstName: "First Name", lastName: "Last Name", team: "Team", position: "Position", heightFeet: <#T##Int#>, heightInches: <#T##Int#>, weightPounds: <#T##Int#>)]
+                                 */
+                            }else{
                                                 
-                                            }
-                                        }
-                                    }
+                            }
+                        }
+                    }
                 ScrollView{
                     List(players){player in
-                        HStack{
-                            Text(player.firstName)
-                            Text(player.lastName)
-                            Text(player.team)
+                        NavigationLink(destination: PlayerClickView()){
+                            HStack{
+                                Text(player.firstName)
+                                Text(player.lastName)
+                                Text(player.team)
+                            }
                         }
                     }.scaledToFill()
+                    
+                    
                 }
                 Text(doneString)
                 Button {
                     Task {
-                        let perPage = 10
+                        let perPage = 100
                         let (origData, _) = try await URLSession.shared.data(from: URL(string:"https://www.balldontlie.io/api/v1/players?search=\(searchString)&per_page=\(perPage)")!)
                         let decoder = JSONDecoder()
                         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -66,6 +77,9 @@ struct PlayerView: View {
                                     
                                     remainingCount = remainingCount - 1
                                     players.append(Player(firstName: searchData1.data[i].firstName, lastName: searchData1.data[i].lastName, team: searchData1.data[i].team.fullName))
+                                    /*
+                                    playerVM.append(PlayerViewModel(firstName: searchData1.data[i].firstName, lastName: searchData1.data[i].lastName, team: searchData1.data[i].team.fullName, position: searchData1.data[i].position, heightFeet: searchData1.data[i].heightFeet ?? <#default value#>, heightInches: searchData1.data[i].heightInches ?? <#default value#>, weightPounds: searchData1.data[i].weightPounds ?? <#default value#> ))
+                                     */
                                     i = i + 1
                                 }
                                 
@@ -109,7 +123,7 @@ struct MainMenuView2: View {
         Image("NBALogo")
             .resizable()
             .scaledToFit()
-            .frame(width:50, height: 50)
+            .frame(width:25, height: 25)
     }
     
 }

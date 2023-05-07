@@ -9,25 +9,17 @@ import Foundation
 import SwiftUI
 
 struct ContentView: View {
-    
-    
-    @State public var players = [ Player(firstName: "First Name", lastName: "Last Name", team: "Team")]
-    @State private var defaultString: String = "No player with this name exists"
-    @State private var doneString: String = ""
-    @State var searchString = ""
         var body: some View {
-            
             NavigationView{
                 VStack{
                     MainMenuView()
-                        .navigationTitle("NBA Player Finder")
+                        .navigationTitle("NBA Player Finder").padding()
+                        .navigationBarTitleDisplayMode(.inline)
                         .offset(y: -60)
-                    NavigationLink(destination: PlayerView(), label: {Text("Get Started")})
                     
+                    NavigationLink(destination: PlayerView(), label: {Text("Get Started")})
                 }
             }
-            
-            
         }
 }
 
@@ -37,7 +29,7 @@ struct MainMenuView: View {
             Image("NBALogo")
                 .resizable()
                 .scaledToFit()
-                .frame(width:200, height: 200)
+                .frame(width:250, height: 250)
         }
     }
     
@@ -54,8 +46,8 @@ struct ContentView_Previews: PreviewProvider {
 struct searchData: Decodable {
     let data: [PlayerData]
     let meta: Meta
-    //data.reserveCapacity(100)
 }
+
 struct PlayerData: Decodable {
     let id: Int
     let firstName: String
