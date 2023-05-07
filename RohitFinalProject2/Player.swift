@@ -14,5 +14,9 @@ struct Player : Codable, Identifiable, Hashable {
     var firstName: String
     var lastName: String
     var team: String
+    var position: String
+    var heightFeet: Int
+    var heightInches: Int
+    var weightPounds: Int
 }
 

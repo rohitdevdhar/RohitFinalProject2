@@ -9,15 +9,15 @@ import SwiftUI
 
 struct PlayerView: View {
     
-    @State public var players = [ Player(firstName: "First Name", lastName: "Last Name", team: "Team")]
-    /*
-    @State public var playerVM = [ PlayerViewModel(firstName: "First Name", lastName: "Last Name", team: "Team", position: "Position", heightFeet: <#T##Int#>, heightInches: <#T##Int#>, weightPounds: <#T##Int#>)]
-     */
+    @State public var players = [Player(firstName: "First Name", lastName: "Last Name", team: "Team", position: "Position", heightFeet: -1, heightInches: -1, weightPounds: -1)]
+    @State private var selectedPlayer: Player = Player.init(firstName: "First Name", lastName: "Last Name", team: "Team",position: "Position", heightFeet: -1, heightInches: -2, weightPounds: -1)
+    
     
     @State private var defaultString: String = "No results found"
     @State private var doneString: String = ""
     @State var searchString = ""
     var body: some View {
+        
         
         NavigationView{
             VStack{
@@ -28,10 +28,7 @@ struct PlayerView: View {
                         Task.init {
                             if !value.isEmpty && value.count > 0 {
                             searchString = value
-                            players = [ Player(firstName: "First Name", lastName: "Last Name", team: "Team")]
-                                /*
-                            playerVM = [ PlayerViewModel(firstName: "First Name", lastName: "Last Name", team: "Team", position: "Position", heightFeet: <#T##Int#>, heightInches: <#T##Int#>, weightPounds: <#T##Int#>)]
-                                 */
+                            players = [ Player(firstName: "First Name", lastName: "Last Name", team: "Team",position: "Position", heightFeet: -1, heightInches: -1, weightPounds: -1)]
                             }else{
                                                 
                             }
@@ -39,7 +36,16 @@ struct PlayerView: View {
                     }
                 ScrollView{
                     List(players){player in
-                        NavigationLink(destination: PlayerClickView()){
+                        NavigationLink(destination: PlayerClickView(player: $selectedPlayer).onAppear(){
+                            selectedPlayer.firstName = player.firstName
+                            selectedPlayer.lastName = player.lastName
+                            selectedPlayer.team = player.team
+                            selectedPlayer.position = player.position
+                            selectedPlayer.heightFeet = player.heightFeet
+                            selectedPlayer.heightInches =
+                                player.heightInches
+                            selectedPlayer.weightPounds = player.weightPounds
+                        }){
                             HStack{
                                 Text(player.firstName)
                                 Text(player.lastName)
@@ -74,15 +80,11 @@ struct PlayerView: View {
                                 var i = 0
                                 while(i < currentPageTotal){
                                     doneString =  String(searchData1.meta.totalCount) + " results found"
-                                    
                                     remainingCount = remainingCount - 1
-                                    players.append(Player(firstName: searchData1.data[i].firstName, lastName: searchData1.data[i].lastName, team: searchData1.data[i].team.fullName))
-                                    /*
-                                    playerVM.append(PlayerViewModel(firstName: searchData1.data[i].firstName, lastName: searchData1.data[i].lastName, team: searchData1.data[i].team.fullName, position: searchData1.data[i].position, heightFeet: searchData1.data[i].heightFeet ?? <#default value#>, heightInches: searchData1.data[i].heightInches ?? <#default value#>, weightPounds: searchData1.data[i].weightPounds ?? <#default value#> ))
-                                     */
+                                    players.append(Player(firstName: searchData1.data[i].firstName, lastName: searchData1.data[i].lastName, team: searchData1.data[i].team.fullName, position: searchData1.data[i].position, heightFeet: searchData1.data[i].heightFeet ?? -1, heightInches: searchData1.data[i].heightInches ?? -1, weightPounds: searchData1.data[i].weightPounds ?? -1 ))
+                                     
                                     i = i + 1
                                 }
-                                
                                 let (origData, _) = try await URLSession.shared.data(from: URL(string:"https://www.balldontlie.io/api/v1/players?search=\(searchString)&page=\(String(describing: searchData1.meta.nextPage) )")!)
                                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                                 searchData1 = try decoder.decode(searchData.self, from: origData)
