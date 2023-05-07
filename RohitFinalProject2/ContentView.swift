@@ -11,75 +11,22 @@ import SwiftUI
 struct ContentView: View {
     
     
-    
+    @State public var players = [ Player(firstName: "First Name", lastName: "Last Name", team: "Team")]
     @State private var defaultString: String = "No player with this name exists"
     @State private var doneString: String = ""
     @State var searchString = ""
         var body: some View {
+            
             NavigationView{
                 VStack{
                     MainMenuView()
                         .navigationTitle("NBA Player Finder")
                         .offset(y: -60)
-                    NavigationLink(destination: Text("Destination"), label: {Text("Get Started")})
-                        .searchable(text: $searchString)
-                        .onChange(of: searchString) {value in
-                            Task.init {
-                                if !value.isEmpty && value.count > 3 {
-                                    searchString = value
-                                }else{
-                                    
-                                }
-                            }
-                        }
+                    NavigationLink(destination: PlayerView(), label: {Text("Get Started")})
+                    
                 }
-                
             }
-            Text(doneString)
-            Button {
-                Task {
-                    let perPage = 10
-                    let (origData, _) = try await URLSession.shared.data(from: URL(string:"https://www.balldontlie.io/api/v1/players?search=\(searchString)&per_page=\(perPage)")!)
-                    /*
-                    let decodedResponse = try? JSONDecoder().decode(Joke.self, from: data)
-                    joke = decodedResponse?.value2 ?? ""
-                     */
-                    //let jsonData = data.data(using: .utf8)!
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    var searchData1 = try decoder.decode(searchData.self, from: origData)
-                   
-                    var remainingCount = 0
-                    if(searchData1.meta.totalCount == 0){
-                        doneString = defaultString
-                    }else{
-                        remainingCount = searchData1.meta.totalCount
-                        var currentPageTotal = 0
-                        while(remainingCount > 0){
-                            if(searchData1.meta.currentPage < searchData1.meta.totalPages){
-                                currentPageTotal = perPage
-                            }else{
-                                currentPageTotal = searchData1.meta.totalCount - ((searchData1.meta.totalPages - 1) * perPage)
-                            }
-                            var i = 0
-                            while(i < currentPageTotal){
-                                doneString = searchData1.data[i].firstName + " " + searchData1.data[i].lastName + " " + String(searchData1.meta.totalCount)
-                                i = i + 1
-                                remainingCount = remainingCount - 1
-                            }
-                            
-                            let (origData, _) = try await URLSession.shared.data(from: URL(string:"https://www.balldontlie.io/api/v1/players?search=\(searchString)&page=\(String(describing: searchData1.meta.nextPage) )")!)
-                            decoder.keyDecodingStrategy = .convertFromSnakeCase
-                            searchData1 = try decoder.decode(searchData.self, from: origData)
-                            
-                        }
-                        
-                    }
-
-                }
-            }label: {
-                Text("Get your Player Data")
-            }
+            
             
         }
 }
