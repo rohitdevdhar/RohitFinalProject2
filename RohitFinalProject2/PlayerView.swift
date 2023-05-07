@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct PlayerView: View {
+    
     @State public var players = [ Player(firstName: "First Name", lastName: "Last Name", team: "Team")]
-    @State private var defaultString: String = "No player with this name exists"
+    @State private var defaultString: String = "No results found"
     @State private var doneString: String = ""
     @State var searchString = ""
     var body: some View {
@@ -21,7 +22,7 @@ struct PlayerView: View {
                     .searchable(text: $searchString)
                                     .onChange(of: searchString) {value in
                                         Task.init {
-                                            if !value.isEmpty && value.count > 3 {
+                                            if !value.isEmpty && value.count > 0 {
                                                 searchString = value
                                                 players = [ Player(firstName: "First Name", lastName: "Last Name", team: "Team")]
                                             }else{
@@ -29,14 +30,16 @@ struct PlayerView: View {
                                             }
                                         }
                                     }
-                    
-                List(players){player in
-                    HStack{
-                        Text(player.firstName)
-                        Text(player.lastName)
-                        Text(player.team)
-                    }
+                ScrollView{
+                    List(players){player in
+                        HStack{
+                            Text(player.firstName)
+                            Text(player.lastName)
+                            Text(player.team)
+                        }
+                    }.scaledToFill()
                 }
+                Text(doneString)
                 Button {
                     Task {
                         let perPage = 10
@@ -59,7 +62,7 @@ struct PlayerView: View {
                                 }
                                 var i = 0
                                 while(i < currentPageTotal){
-                                    doneString = searchData1.data[i].firstName + " " + searchData1.data[i].lastName + " " + String(searchData1.meta.totalCount)
+                                    doneString =  String(searchData1.meta.totalCount) + " results found"
                                     
                                     remainingCount = remainingCount - 1
                                     players.append(Player(firstName: searchData1.data[i].firstName, lastName: searchData1.data[i].lastName, team: searchData1.data[i].team.fullName))
@@ -100,6 +103,9 @@ struct PlayerView_Previews: PreviewProvider {
 
 struct MainMenuView2: View {
     var body: some View {
+        ZStack{
+            
+        }
         Image("NBALogo")
             .resizable()
             .scaledToFit()
