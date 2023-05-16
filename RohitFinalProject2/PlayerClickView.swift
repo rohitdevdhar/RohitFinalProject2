@@ -10,14 +10,32 @@ import SwiftUI
 struct PlayerClickView: View {
     @Binding var player: Player
     var body: some View {
+        VStack{
+            Text(player.firstName + " " + player.lastName)
+                .font(.system(.largeTitle, design: .rounded))
+            Circle()
+                .fill(Color.cyan)
+                .overlay(
+                    VStack{
+                        
+                        Text("Team: " + player.team)
+                            .font(.system(size:20, design: .rounded))
+                        Text("Position: " + player.position)
+                            .font(.system(size:20, design: .rounded))
+                        Text("Height Feet: " + (String)(player.heightFeet))
+                            .font(.system(size:20, design: .rounded))
+                        Text("Height Inches: " + (String)(player.heightInches))
+                            .font(.system(size:20, design: .rounded))
+                        Text("Weight: " + (String)(player.weightPounds) + " lbs")
+                            .font(.system(size:20, design: .rounded))
+                    }
+                    
+                )
+        }.background(Color.yellow)
         
-        Text("First Name: " + player.firstName)
-        Text("Last Name: " + player.lastName)
-        Text("Team: " + player.team)
-        Text("Position: " + player.position)
-        Text("Height Feet: " + (String)(player.heightFeet))
-        Text("Height Inches: " + (String)(player.heightInches))
-        Text("Weight Pounds: " + (String)(player.weightPounds))
+        
+        
+        
     }
 }
 

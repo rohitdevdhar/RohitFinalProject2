@@ -16,7 +16,6 @@ struct ContentView: View {
                         .navigationTitle("NBA Player Finder").padding()
                         .navigationBarTitleDisplayMode(.inline)
                         .offset(y: -60)
-                    
                     NavigationLink(destination: PlayerView(), label: {Text("Get Started")})
                 }
             }
