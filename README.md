@@ -23,9 +23,6 @@ git clone https://github.com/rohitdevdhar/RohitFinalProject2
 2. Open repo with SwiftUI compatible IDE
 3. Run project
 
-## Project Preview
-
-
 ## Developer and More Info
 Rohit Devdhar
 
