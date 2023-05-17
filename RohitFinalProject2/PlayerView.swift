@@ -21,6 +21,7 @@ struct PlayerView: View {
         NavigationView{
             VStack{
                 //this is basically where my search bar is created and implemented. searchable is used for this and I am adding to the array players when the search is created.
+                Text("Search up any NBA player's last name!")
                 MainMenuView2()
                     .offset(y:-150)
                     .searchable(text: $searchString)

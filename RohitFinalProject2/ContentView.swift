@@ -18,6 +18,7 @@ struct ContentView: View {
                         .navigationBarTitleDisplayMode(.inline)
                         .offset(y: -60)
                     NavigationLink(destination: PlayerView(), label: {Text("Get Started")})
+                    
                 }
             }
         }
