@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+//this is the main content view where my homepage is and my navigation link to the second page is
 struct ContentView: View {
         var body: some View {
             NavigationView{

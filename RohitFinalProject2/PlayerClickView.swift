@@ -10,6 +10,7 @@ import SwiftUI
 struct PlayerClickView: View {
     @Binding var player: Player
     var body: some View {
+        // this is just where I have created the player card for when a specific player is clicked on
         VStack{
             Text(player.firstName + " " + player.lastName)
                 .font(.system(.largeTitle, design: .rounded))

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PlayerView: View {
     
+    //this is where is create arrays for parsing my api. players is to obtain basically all the players and selectedPlayer is for when I select a player to get their player profile
     @State public var players = [Player(firstName: "First Name", lastName: "Last Name", team: "Team", position: "Position", heightFeet: -1, heightInches: -1, weightPounds: -1)]
     @State private var selectedPlayer: Player = Player.init(firstName: "First Name", lastName: "Last Name", team: "Team",position: "Position", heightFeet: -1, heightInches: -1, weightPounds: -1)
     
@@ -19,6 +20,7 @@ struct PlayerView: View {
     var body: some View {
         NavigationView{
             VStack{
+                //this is basically where my search bar is created and implemented. searchable is used for this and I am adding to the array players when the search is created.
                 MainMenuView2()
                     .offset(y:-150)
                     .searchable(text: $searchString)
@@ -32,8 +34,10 @@ struct PlayerView: View {
                             }
                         }
                     }
+                //ScrollView is used here to be able to Scroll through all the results of the NBA players searched up
                 ScrollView{
                     List(players){player in
+                        // onAppeear is used here so that when a player is clicked on, all of the info below is available in my PlayerClickView class
                         NavigationLink(destination: PlayerClickView(player: $selectedPlayer).onAppear(){
                             selectedPlayer.firstName = player.firstName
                             selectedPlayer.lastName = player.lastName
@@ -53,8 +57,10 @@ struct PlayerView: View {
                     }.scaledToFill()
                 }
                 Text(doneString)
+                //this button is basically the API call to get all the data from the balldontlie API.
                 Button {
                     Task {
+                        //this is where I am getting the data from the API using JSONDecoder
                         let perPage = 100
                         let (origData, _) = try await URLSession.shared.data(from: URL(string:"https://www.balldontlie.io/api/v1/players?search=\(searchString)&per_page=\(perPage)")!)
                         let decoder = JSONDecoder()
